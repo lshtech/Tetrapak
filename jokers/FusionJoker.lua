@@ -8,22 +8,30 @@ local function init()
             "replace a cards in the shop",
         }
     }
-    local fusionjoker = SMODS.Joker(
+    local fusionjoker = SMODS.Joker:new(
+        "Fusion Joker",
+        tpmakeID("fusion_joker"),
         {
-            name = "Fusion Joker",
-            key = "fusion_joker",
-            loc_txt = loc_text,
-            rarity = 3, -- rarity
-            cost = 6, -- cost
-            config = {
-                extra = {
-                    Xmult = 1,
-                    fusemult = 0.5,
-                    chance = 5,
-                    fusions = 0
-                }
+            extra = {
+                Xmult = 1,
+                fusemult = 0.5,
+                chance = 5,
+                fusions = 0
             }
-        }
+        },
+        {
+            x = 0,
+            y = 0
+        },
+        loc_text,
+        
+        3, -- rarity
+        7, -- cost
+        true,
+        false,
+        true,
+        true,
+        "Fusion Joker"
     )
     
     
@@ -33,9 +41,9 @@ end
 
 local function load_effect()
 
-    SMODS.Centers[tpjokerSlug("fusion_joker")].calculate = function(self, card, context)
+    SMODS.Jokers[tpjokerSlug("fusion_joker")].calculate = function(card, context)
         if context.cardarea == G.jokers then
-            if context.joker_main then
+            if SMODS.end_calculate_context(context) then
                 return {
                     message = localize{type='variable',key='a_xmult',vars={card.ability.extra.Xmult}},
                     Xmult_mod = card.ability.extra.Xmult
@@ -60,16 +68,12 @@ local function load_effect()
         end
     end
 
-    SMODS.Centers[tpjokerSlug("fusion_joker")].loc_vars = function(self, info_queue, card)
-        local probabilities = G.GAME and G.GAME.probabilities.normal or 1
-
+    SMODS.Jokers[tpjokerSlug("fusion_joker")].loc_def = function(card)
         return {
-            vars ={
             card.ability.extra.Xmult,
-            probabilities,
+            G.GAME.probabilities.normal,
             card.ability.extra.chance,
             card.ability.extra.fusemult
-            }
         }
     end
 

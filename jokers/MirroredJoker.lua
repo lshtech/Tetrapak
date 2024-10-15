@@ -9,16 +9,29 @@ local function init()
         }
     }
 
-    local mirroredjoker = SMODS.Joker(
+    local mirroredjoker = SMODS.Joker:new(
+        "Mirrored Joker",
+        tpmakeID("mirrored_joker"),
         {
-            name = "Mirrored Joker",
-            key = ("mirrored_joker"),
-            loc_txt = loc_text,
-            rarity = 2, -- rarity
-            cost = 6, -- cost
-        }
+            --pinned = true,
+            extra = {}
+        },
+        {
+            x = 0,
+            y = 0
+        },
+        loc_text,
+        3, -- rarity
+        7, -- cost
+        true,
+        false,
+        true,
+        true,
+        "Mirrored Joker"
     )
-    
+    mirroredjoker.set_ability = function(self, center, initial, delay_sprites)
+        self.pinned = true
+    end
     
     Tetrapak.Jokers["j_" .. tpmakeID("mirrored_joker")] = mirroredjoker
     
@@ -26,10 +39,8 @@ end
 
 local function load_effect()
 
-    
-
-    SMODS.Centers[tpjokerSlug("mirrored_joker")].calculate = function(self, card, context)
-        if context.cardarea == G.jokers and context.joker_main then
+    SMODS.Jokers["j_" .. tpmakeID("mirrored_joker")].calculate = function(card, context)
+        if context.cardarea == G.jokers and SMODS.end_calculate_context(context) then
             local currChips =  hand_chips
             local currMult = mult
 

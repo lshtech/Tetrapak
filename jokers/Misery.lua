@@ -9,17 +9,24 @@ local function init()
         
         }
     }
-    local Misery = SMODS.Joker(
+    local Misery = SMODS.Joker:new(
+        "Misery",
+        tpmakeID("misery"),
         {
-            name = "Misery",
-            key = ("misery"),
-            loc_txt = loc_text,
-            rarity = CURSERARITY, -- rarity
-            cost = 6, -- cost
-            config = {
-                extra = {Xmult = 0.5}
-            }
-        }
+            extra = {Xmult = 0.5}
+        },
+        {
+            x = 0,
+            y = 0
+        },
+        loc_text,
+        CURSERARITY,
+        0,
+        true,
+        false,
+        false,
+        true,
+        "Misery"
     )
     
     Tetrapak.Jokers["j_" .. tpmakeID("misery")] = Misery
@@ -29,9 +36,9 @@ end
 
 local function load_effect()
 
-    SMODS.Centers[tpjokerSlug("misery")].calculate = function(self, card, context)
+    SMODS.Jokers["j_" .. tpmakeID("misery")].calculate = function(card, context)
         if context.cardarea == G.jokers then
-            if context.joker_main and not context.blueprint then
+            if SMODS.end_calculate_context(context) and not context.blueprint then
                 return {
                     message = localize{type='variable',key='a_xmult',vars={card.ability.extra.Xmult}},
                     Xmult_mod = card.ability.extra.Xmult
@@ -42,21 +49,18 @@ local function load_effect()
         end
     end
 
-    SMODS.Centers[tpjokerSlug("misery")].set_ability = function(self, card, initial, delay_sprites)
+    SMODS.Jokers["j_" .. tpmakeID("misery")].set_ability = function(card, initial, delay_sprites)
         card.pinned_right = true
     end
 
-    SMODS.Centers[tpjokerSlug("misery")].set_badges = function (self, card, badges)
+    SMODS.Jokers["j_" .. tpmakeID("misery")].set_badges = function (card, badges)
         badges[#badges+1] = create_badge('Pinned Right', HEX('77FF77'), HEX('000000'), 1.2)
     end
-    
 
-    SMODS.Centers[tpjokerSlug("misery")].loc_vars = function(self, _info, card)
+
+    SMODS.Jokers["j_" .. tpmakeID("misery")].loc_def = function(card)
         return {
-            vars ={
-                card.ability.extra.Xmult
-            }
-            
+            card.ability.extra.Xmult
         }
     end
     

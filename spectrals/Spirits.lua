@@ -11,13 +11,24 @@ local function init()
 
     local data ={
         name = "Spirits",
-        key = tpmakeID("spirits"),
-        set = "Spectral",
-        loc_txt = loc_text,
-    
+        slug = tpmakeID("spirits"),
+        config = {
+            extra = {
+                
+            }
+        },
+        pos = {
+            x = 0,
+            y = 0
+        },
+        loc_text = loc_text,
+        cost = 6,
+        discovered = false,
+        --atlas = tpconsumableSlug(name)
+
     }
 
-    local Spirits = SMODS.Consumable(data)
+    local Spirits = SMODS.Spectral:new(data.name, data.slug, data.config, data.pos, data.loc_text, data.cost, true, data.discovered, data.atlas)
 
 
     Tetrapak.Spectrals[tpmakeID("spirits")] = Spirits
@@ -27,7 +38,7 @@ end
 
 local function load_effect()
     
-        SMODS.Centers[tpconsumableSlug("spirits")].use = function(card, area, copier)
+        SMODS.Spectrals[tpconsumableSlug("spirits")].use = function(card, area, copier)
             local newjoker = create_card('Joker', G.jokers, nil, 0.75, nil, nil, nil, 'spi')
             newjoker:add_to_deck()
             G.jokers:emplace(newjoker)
@@ -40,7 +51,7 @@ local function load_effect()
             curse:start_materialize()
         end
 
-        SMODS.Centers[tpconsumableSlug("spirits")].can_use = function(card)
+        SMODS.Spectrals[tpconsumableSlug("spirits")].can_use = function(card)
             return true
         end
     

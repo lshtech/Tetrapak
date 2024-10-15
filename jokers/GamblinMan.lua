@@ -11,26 +11,33 @@ local function init()
     }
     
 
-    local GamblinMan = SMODS.Joker(
+    local GamblinMan = SMODS.Joker:new(
+        "Gamblin Man",
+        tpmakeID("gamblin_man"),
         {
-            name = "Gamblin' Man",
-            key = "gamblin_man",
-            loc_txt = loc_text,
-            rarity = 1, -- rarity
-            cost = 2, -- cost
-            config = {
-                extra = {
-                    min = -0.5,
-                    max = 2
-                }
-            },
-            
-            
-        }
-    )
-    Tetrapak.Jokers[tpjokerSlug("gamblin_man")] = GamblinMan
-
+            extra = {
+                min = -0.5,
+                max = 2
+            }
+        },
+        {
+            x = 0,
+            y = 0
+        },
+        loc_text,
+        1,
+        0,
+        true,
+        false,
+        false,
+        true,
+        "Gamblin Man"
         
+    )
+    
+    Tetrapak.Jokers["j_" .. tpmakeID("gamblin_man")] = GamblinMan
+    
+    
 end
 
 local function load_effect()
@@ -39,10 +46,10 @@ local function load_effect()
     -- based on Fiendish Joker from Bunco
 
     function ease_dollars(mod, instant)
-        print("ease_dollars", mod, instant)
+
         if G.jokers ~= nil then
             for _, v in ipairs(G.jokers.cards) do
-                if v.ability.name == "Gamblin' Man" and not v.debuff and mod > 0 then
+                if v.ability.name == "Gamblin Man" and not v.debuff and mod > 0 then
                     local mult = pseudorandom("gamblin_man") -- 0 - 1
                     mult = v.ability.extra.min + mult * (v.ability.extra.max - v.ability.extra.min)
 
@@ -61,15 +68,13 @@ local function load_effect()
         original_ease_dollars(mod, instant)
     end
 
-    SMODS.Centers[tpjokerSlug("gamblin_man")].loc_vars = function (self, info_queue, card)
+    SMODS.Jokers[tpjokerSlug("gamblin_man")].loc_def =function (card)
+        
         return {
-            vars ={
             card.ability.extra.min,
             card.ability.extra.max
-            }
         }
     end
-    
     
 end
 

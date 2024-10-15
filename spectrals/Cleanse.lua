@@ -10,18 +10,24 @@ local function init()
 
     local data = {
         name = "Cleanse",
-        key = tpmakeID("cleanse"),
-        set = "Spectral",
+        slug = tpmakeID("cleanse"),
         config = {
             extra = {
                 Removes = 1
             }
         },
-        
-        loc_txt = loc_text,
+        pos = {
+            x = 0,
+            y = 0
+        },
+        loc_text = loc_text,
+        cost = 6,
+        discovered = false
+
     }
 
-    local Cleanse = SMODS.Consumable(data)
+    local Cleanse = SMODS.Spectral:new(data.name, data.slug, data.config, data.pos, data.loc_text, data.cost, true, data.discovered)
+
 
     Tetrapak.Spectrals[tpmakeID("cleanse")] = Cleanse
     
@@ -30,7 +36,7 @@ end
 
 local function load_effect()
     
-        SMODS.Centers[tpconsumableSlug("cleanse")].use = function(self, card, area, copier)
+        SMODS.Spectrals[tpconsumableSlug("cleanse")].use = function(card, area, copier)
             local eligible_strength_jokers = {}
             for k, v in pairs(G.jokers.cards) do
                 if v.ability.set == 'Joker' and v.config.center.rarity == CURSERARITY then
@@ -48,7 +54,7 @@ local function load_effect()
             end
         end
 
-        SMODS.Centers[tpconsumableSlug("cleanse")].can_use = function(self, card)
+        SMODS.Spectrals[tpconsumableSlug("cleanse")].can_use = function(card)
             local eligible_strength_jokers = {}
             for k, v in pairs(G.jokers.cards) do
                 if v.ability.set == 'Joker' and v.config.center.rarity == CURSERARITY then
@@ -62,12 +68,9 @@ local function load_effect()
             return #eligible_strength_jokers > 0
         end
 
-        SMODS.Centers[tpconsumableSlug("cleanse")].loc_vars = function(self, info_queue, card)
+        SMODS.Spectrals[tpconsumableSlug("cleanse")].loc_def = function(center, info)
             return {
-                vars = {
-                    card.ability.extra.Removes
-                },
-                
+                center.config.extra.Removes
             }
         end
 

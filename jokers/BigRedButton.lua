@@ -7,16 +7,29 @@ local function init()
             "Reroll all your jokers and consumables."
         }
     }
-    local big_red_button = SMODS.Joker(
+    local big_red_button = SMODS.Joker:new(
+        "Big Red Button",
+        tpmakeID("big_red_button"),
         {
-        name = "Big Red Button",
-        key = ("big_red_button"),
-        loc_txt = loc_text,
-        rarity = 2, -- rarity
-        cost = 6, -- cost
-        }
+            --pinned = true,
+            extra = {}
+        },
+        {
+            x = 0,
+            y = 0
+        },
+        loc_text,
+        2, -- rarity
+        2, -- cost
+        true,
+        false,
+        false,
+        false,
+        "Big Red Button"
     )
-    
+    big_red_button.set_ability = function(self, center, initial, delay_sprites)
+        self.pinned = true
+    end
     
     Tetrapak.Jokers["j_" .. tpmakeID("big_red_button")] = big_red_button
     
@@ -31,7 +44,7 @@ local function load_effect()
 
             local jokers = G.jokers.cards
             local consumables = G.consumeables.cards
-            local num_jokers = #jokers - 1 -- don't reroll the big red button
+            local num_jokers = #jokers
             local legendaries = 0
             for k, v in pairs(jokers) do
                 print(v.config.center.rarity)
@@ -39,13 +52,8 @@ local function load_effect()
                     legendaries = legendaries + 1
                     num_jokers = num_jokers - 1
                 end
-            if (not v.ability.eternal) then
                 v:start_dissolve()
-            else
-               num_jokers = num_jokers - 1
-
             end
-        end
             self:start_dissolve()
 
             

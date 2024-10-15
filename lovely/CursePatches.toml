@@ -6,19 +6,14 @@ priority = 0
 [[patches]]
 [patches.pattern]
 target = "functions/UI_definitions.lua"
-pattern = "card_type = (debuffed and AUT.card_type ~= 'Enhanced') and localize('k_debuffed') or card_type"
-position = "after"
-payload = '''
+pattern = "if AUT.card_type == 'Enhanced' then card_type = localize{type = 'name_text', key = card.config.center.key, set = 'Enhanced'} end"
+position = "before"
+payload = """
 if AUT.card_type == 'Joker' and card.config.center.rarity == (CURSERARITY) then
-    print("k_"..CURSERARITY)
-    card_type = localize("k_"..CURSERARITY) 
+    card_type = localize('k_' .. CURSERARITY) 
 end
-'''
+"""
 match_indent = true
-overwrite = false
-
-
-
 
 [[patches]]
 [patches.pattern]
