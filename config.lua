@@ -20,10 +20,10 @@ return {
         chaos = true,
         spirits = true,
         blastshower = true,
+        theunseen = true,
+        emptycage = true,
         bound = true,
         misery = true,
         gamblinman = true,
-        emptycage = true,
-        theunseen = true,
 },
 }
